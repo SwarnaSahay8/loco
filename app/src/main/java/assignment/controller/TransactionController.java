@@ -8,6 +8,8 @@ import assignment.model.Transaction;
 import assignment.repository.TransactionRepository;
 import assignment.utils.JsonUtil;
 import assignment.validator.AddTransactionRequestValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
 
@@ -18,6 +20,8 @@ import static assignment.constants.TransactionConstants.SUCCESS_STATUS;
 import static assignment.constants.TransactionConstants.TRANSACTION_ID_PARAM;
 
 public class TransactionController {
+
+    private final Logger logger = LoggerFactory.getLogger(TransactionController.class);
 
     private final TransactionRepository transactionRepository;
     private final AddTransactionRequestValidator validator;
@@ -33,13 +37,16 @@ public class TransactionController {
 
         GenericResponse validationResponse = validator.validate(transactionRequest);
         if (!validationResponse.isSuccess()) {
+            logger.error("validation failed for add transaction");
             return getContractResponse(response, BAD_REQUEST_HTTP_CODE, FAILED_STATUS);
         }
         Transaction transaction = TransactionRequestMapper.mapFromAddTransactionRequest(transactionRequest, transactionId);
         GenericResponse dbInsertResponse = transactionRepository.insert(transaction);
         if (dbInsertResponse.isSuccess()) {
+            logger.debug("add transaction successful");
             return getContractResponse(response, SUCCESS_HTTP_CODE, SUCCESS_STATUS);
         } else {
+            logger.error("add transaction failed");
             return getContractResponse(response, BAD_REQUEST_HTTP_CODE, FAILED_STATUS);
         }
     }
