@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import static spark.Spark.after;
 import static spark.Spark.awaitStop;
+import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.put;
 import static spark.Spark.stop;
@@ -31,6 +32,7 @@ public class Server {
         port(appConfig.getValueAsInt("APP_PORT"));
 
         put("/transactionservice/transaction/:transaction_id", transactionController::upsertTransaction, jsonResponseTransformer);
+        get("/transactionservice/types/:type", transactionController::getTransactionsByType, jsonResponseTransformer);
 
         after("/*", (request, response) -> response.type("application/json"));
     }

@@ -13,11 +13,15 @@ import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
 
+import java.util.Collections;
+import java.util.List;
+
 import static assignment.constants.TransactionConstants.BAD_REQUEST_HTTP_CODE;
 import static assignment.constants.TransactionConstants.FAILED_STATUS;
 import static assignment.constants.TransactionConstants.SUCCESS_HTTP_CODE;
 import static assignment.constants.TransactionConstants.SUCCESS_STATUS;
 import static assignment.constants.TransactionConstants.TRANSACTION_ID_PARAM;
+import static assignment.constants.TransactionConstants.TYPE_PARAM;
 
 public class TransactionController {
 
@@ -48,6 +52,20 @@ public class TransactionController {
         } else {
             logger.error("add transaction failed");
             return getContractResponse(response, BAD_REQUEST_HTTP_CODE, FAILED_STATUS);
+        }
+    }
+
+    public List<Long> getTransactionsByType(Request request, Response response) {
+        String type = request.params(TYPE_PARAM);
+        GenericResponse<List<Long>> genericResponse = transactionRepository.getByType(type);
+        if (genericResponse.isSuccess()) {
+            logger.debug("get transaction ids request is successful");
+            response.status(SUCCESS_HTTP_CODE);
+            return genericResponse.getData();
+        } else {
+            logger.error("get transaction ids request failed");
+            response.status(BAD_REQUEST_HTTP_CODE);
+            return Collections.emptyList();
         }
     }
 

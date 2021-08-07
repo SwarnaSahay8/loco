@@ -1,6 +1,7 @@
 package assignment.controller;
 
 import assignment.contract.response.GenericContractResponse;
+import assignment.model.Error;
 import assignment.model.GenericResponse;
 import assignment.model.Transaction;
 import assignment.repository.TransactionRepository;
@@ -13,11 +14,15 @@ import org.mockito.junit.MockitoJUnitRunner;
 import spark.Request;
 import spark.Response;
 
+import java.util.Collections;
+import java.util.List;
+
 import static assignment.constants.TransactionConstants.BAD_REQUEST_HTTP_CODE;
 import static assignment.constants.TransactionConstants.FAILED_STATUS;
 import static assignment.constants.TransactionConstants.SUCCESS_HTTP_CODE;
 import static assignment.constants.TransactionConstants.SUCCESS_STATUS;
 import static assignment.constants.TransactionConstants.TRANSACTION_ID_PARAM;
+import static assignment.constants.TransactionConstants.TYPE_PARAM;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -111,5 +116,26 @@ public class TransactionControllerTest {
         GenericContractResponse expectedResponse = new GenericContractResponse(FAILED_STATUS);
         assertEquals(expectedResponse, actualResponse);
         verify(mockResponse).status(BAD_REQUEST_HTTP_CODE);
+    }
+
+    @Test
+    public void shouldReturnListOfTransactionIdsForGetTransactionIdRequest() {
+        String type = "car";
+        when(mockRequest.params(TYPE_PARAM)).thenReturn(type);
+        List<Long> transactionIds = List.of(1L, 2L, 3L, 4L);
+        GenericResponse<List<Long>> genericResponse = new GenericResponse<>(true, transactionIds);
+        when(mockTransactionRepository.getByType(type)).thenReturn(genericResponse);
+        List<Long> actualResponse = transactionController.getTransactionsByType(mockRequest, mockResponse);
+        assertEquals(transactionIds, actualResponse);
+    }
+
+    @Test
+    public void shouldReturnEmptyListForGetTransactionIdRequestWhenTransactionRepositoryReturnsError() {
+        String type = "car";
+        when(mockRequest.params(TYPE_PARAM)).thenReturn(type);
+        GenericResponse<List<Long>> genericResponse = new GenericResponse<>(new Error("entity", "message"));
+        when(mockTransactionRepository.getByType(type)).thenReturn(genericResponse);
+        List<Long> actualResponse = transactionController.getTransactionsByType(mockRequest, mockResponse);
+        assertEquals(Collections.emptyList(), actualResponse);
     }
 }

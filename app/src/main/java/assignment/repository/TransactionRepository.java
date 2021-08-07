@@ -8,7 +8,10 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TransactionRepository {
 
@@ -34,7 +37,23 @@ public class TransactionRepository {
             logger.debug("statement execute row update: {}", executeResult);
             return new GenericResponse(true);
         } catch (SQLException e) {
-            return exceptionResponse();
+            return exceptionResponse(e);
+        }
+    }
+
+    public GenericResponse<List<Long>> getByType(String type) {
+        String sql = "select transaction_id from transactions where type=?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, type);
+            ResultSet resultSet = statement.executeQuery();
+            List<Long> transactionIds = new ArrayList<>();
+            while (resultSet.next()) {
+                transactionIds.add(resultSet.getLong(1));
+            }
+            return new GenericResponse<>(true, transactionIds);
+        } catch (SQLException e) {
+            return exceptionResponse(e);
         }
     }
 
@@ -53,7 +72,8 @@ public class TransactionRepository {
         }
     }
 
-    private GenericResponse exceptionResponse() {
+    private GenericResponse exceptionResponse(Exception e) {
+        logger.error("sql exception: ", e);
         return new GenericResponse(new Error("db", "sql exception"));
     }
 }
