@@ -33,6 +33,7 @@ public class Server {
 
         put("/transactionservice/transaction/:transaction_id", transactionController::upsertTransaction, jsonResponseTransformer);
         get("/transactionservice/types/:type", transactionController::getTransactionsByType, jsonResponseTransformer);
+        get("/transactionservice/sum/:transaction_id", transactionController::getTotalTransactionAmount, jsonResponseTransformer);
 
         after("/*", (request, response) -> response.type("application/json"));
     }

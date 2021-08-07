@@ -2,6 +2,7 @@ package assignment.controller;
 
 import assignment.contract.request.UpsertTransactionRequest;
 import assignment.contract.response.GenericContractResponse;
+import assignment.contract.response.TransactionAmountResponse;
 import assignment.mapper.TransactionRequestMapper;
 import assignment.model.GenericResponse;
 import assignment.model.Transaction;
@@ -66,6 +67,20 @@ public class TransactionController {
             logger.error("get transaction ids request failed");
             response.status(BAD_REQUEST_HTTP_CODE);
             return Collections.emptyList();
+        }
+    }
+
+    public TransactionAmountResponse getTotalTransactionAmount(Request request, Response response) {
+        Long transactionId = Long.valueOf(request.params(TRANSACTION_ID_PARAM));
+        GenericResponse<Double> genericResponse = transactionRepository.getTotalTransactionAmount(transactionId);
+        if (genericResponse.isSuccess()) {
+            logger.debug("get total transaction amount request is successful");
+            response.status(SUCCESS_HTTP_CODE);
+            return new TransactionAmountResponse(genericResponse.getData());
+        } else {
+            logger.error("get total transaction amount request failed");
+            response.status(BAD_REQUEST_HTTP_CODE);
+            return null;
         }
     }
 

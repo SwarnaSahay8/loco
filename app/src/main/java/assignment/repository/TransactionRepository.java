@@ -16,7 +16,6 @@ import java.util.List;
 public class TransactionRepository {
 
     private final Logger logger = LoggerFactory.getLogger(TransactionRepository.class);
-
     private final Connection connection;
 
     public TransactionRepository(Connection connection) {
@@ -41,7 +40,7 @@ public class TransactionRepository {
         }
     }
 
-    public GenericResponse<List<Long>> getByType(String type) {
+    public GenericResponse getByType(String type) {
         String sql = "select transaction_id from transactions where type=?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -52,6 +51,22 @@ public class TransactionRepository {
                 transactionIds.add(resultSet.getLong(1));
             }
             return new GenericResponse<>(true, transactionIds);
+        } catch (SQLException e) {
+            return exceptionResponse(e);
+        }
+    }
+
+    public GenericResponse getTotalTransactionAmount(Long transactionId) {
+        String sql = "with recursive transactions_result as (select transaction_id, amount, parent_id from transactions " +
+                "where transaction_id in (select t.transaction_id from transactions as t where t.parent_id = ?) " +
+                "union all select child.transaction_id, child.amount, child.parent_id from transactions as child join" +
+                " transactions_result as parent on parent.transaction_id = child.parent_id) select sum(amount) from transactions_result;";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setLong(1, transactionId);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            return new GenericResponse<>(true, resultSet.getDouble(1));
         } catch (SQLException e) {
             return exceptionResponse(e);
         }

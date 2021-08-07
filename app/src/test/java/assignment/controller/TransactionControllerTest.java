@@ -1,6 +1,7 @@
 package assignment.controller;
 
 import assignment.contract.response.GenericContractResponse;
+import assignment.contract.response.TransactionAmountResponse;
 import assignment.model.Error;
 import assignment.model.GenericResponse;
 import assignment.model.Transaction;
@@ -24,6 +25,7 @@ import static assignment.constants.TransactionConstants.SUCCESS_STATUS;
 import static assignment.constants.TransactionConstants.TRANSACTION_ID_PARAM;
 import static assignment.constants.TransactionConstants.TYPE_PARAM;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -137,5 +139,26 @@ public class TransactionControllerTest {
         when(mockTransactionRepository.getByType(type)).thenReturn(genericResponse);
         List<Long> actualResponse = transactionController.getTransactionsByType(mockRequest, mockResponse);
         assertEquals(Collections.emptyList(), actualResponse);
+    }
+
+    @Test
+    public void shouldReturnTotalTransactionSumForGivenTransactionId() {
+        Long transactionId = 23L;
+        when(mockRequest.params(TRANSACTION_ID_PARAM)).thenReturn(Long.toString(transactionId));
+        GenericResponse<Double> genericResponse = new GenericResponse<>(true, 34.56);
+        when(mockTransactionRepository.getTotalTransactionAmount(transactionId)).thenReturn(genericResponse);
+        TransactionAmountResponse actualResponse = transactionController.getTotalTransactionAmount(mockRequest, mockResponse);
+        TransactionAmountResponse expectedResponse = new TransactionAmountResponse(34.56);
+        assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
+    public void shouldReturnForGetTransactionIdRequestWhenTransactionRepositoryGivesError() {
+        Long transactionId = 23L;
+        when(mockRequest.params(TRANSACTION_ID_PARAM)).thenReturn(Long.toString(transactionId));
+        GenericResponse<Double> genericResponse = new GenericResponse<>(new Error("entity", "message"));
+        when(mockTransactionRepository.getTotalTransactionAmount(transactionId)).thenReturn(genericResponse);
+        TransactionAmountResponse actualResponse = transactionController.getTotalTransactionAmount(mockRequest, mockResponse);
+        assertNull(actualResponse);
     }
 }
