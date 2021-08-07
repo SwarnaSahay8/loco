@@ -1,0 +1,12 @@
+version: '3.6'
+services:
+  transactions_db:
+    image: postgres:11.2-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=transactions_db
+      - POSTGRES_USER=swarna
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - ./app/src/main/resources/db/create_table.sql:/docker-entrypoint-initdb.d/create_table.sql
