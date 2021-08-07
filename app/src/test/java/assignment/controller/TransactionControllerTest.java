@@ -56,9 +56,9 @@ public class TransactionControllerTest {
                 "  \"type\": \"car\",\n" +
                 "  \"parent_id\": 12\n" +
                 "}");
-        when(mockTransactionRepository.insert(transaction)).thenReturn(new GenericResponse(true));
+        when(mockTransactionRepository.upsert(transaction)).thenReturn(new GenericResponse(true));
 
-        GenericContractResponse actualResponse = transactionController.addTransaction(mockRequest, mockResponse);
+        GenericContractResponse actualResponse = transactionController.upsertTransaction(mockRequest, mockResponse);
         GenericContractResponse expectedResponse = new GenericContractResponse(SUCCESS_STATUS);
         assertEquals(expectedResponse, actualResponse);
         verify(mockResponse).status(SUCCESS_HTTP_CODE);
@@ -74,7 +74,7 @@ public class TransactionControllerTest {
                 "  \"parent_id\": 12\n" +
                 "}");
 
-        GenericContractResponse actualResponse = transactionController.addTransaction(mockRequest, mockResponse);
+        GenericContractResponse actualResponse = transactionController.upsertTransaction(mockRequest, mockResponse);
         GenericContractResponse expectedResponse = new GenericContractResponse(FAILED_STATUS);
         assertEquals(expectedResponse, actualResponse);
         verify(mockResponse).status(BAD_REQUEST_HTTP_CODE);
@@ -90,7 +90,7 @@ public class TransactionControllerTest {
                 "  \"parent_id\": 12\n" +
                 "}");
 
-        GenericContractResponse actualResponse = transactionController.addTransaction(mockRequest, mockResponse);
+        GenericContractResponse actualResponse = transactionController.upsertTransaction(mockRequest, mockResponse);
         GenericContractResponse expectedResponse = new GenericContractResponse(FAILED_STATUS);
         assertEquals(expectedResponse, actualResponse);
         verify(mockResponse).status(BAD_REQUEST_HTTP_CODE);
@@ -107,7 +107,7 @@ public class TransactionControllerTest {
                 "  \"parent_id\": 12\n" +
                 "}");
 
-        GenericContractResponse actualResponse = transactionController.addTransaction(mockRequest, mockResponse);
+        GenericContractResponse actualResponse = transactionController.upsertTransaction(mockRequest, mockResponse);
         GenericContractResponse expectedResponse = new GenericContractResponse(FAILED_STATUS);
         assertEquals(expectedResponse, actualResponse);
         verify(mockResponse).status(BAD_REQUEST_HTTP_CODE);

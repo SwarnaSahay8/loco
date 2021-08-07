@@ -30,7 +30,7 @@ public class Server {
         logger.debug("server has started");
         port(appConfig.getValueAsInt("APP_PORT"));
 
-        put("/transactionservice/transaction/:transaction_id", transactionController::addTransaction, jsonResponseTransformer);
+        put("/transactionservice/transaction/:transaction_id", transactionController::upsertTransaction, jsonResponseTransformer);
 
         after("/*", (request, response) -> response.type("application/json"));
     }

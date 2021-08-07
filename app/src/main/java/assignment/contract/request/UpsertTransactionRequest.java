@@ -1,12 +1,12 @@
 package assignment.contract.request;
 
-public class AddTransactionRequest {
+public class UpsertTransactionRequest {
 
     private Double amount;
     private String type;
     private Long parentId;
 
-    public AddTransactionRequest(Double amount, String type, Long parentId) {
+    public UpsertTransactionRequest(Double amount, String type, Long parentId) {
         this.amount = amount;
         this.type = type;
         this.parentId = parentId;

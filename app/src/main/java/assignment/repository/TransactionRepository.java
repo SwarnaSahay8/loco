@@ -20,7 +20,7 @@ public class TransactionRepository {
         this.connection = connection;
     }
 
-    public GenericResponse insert(Transaction transaction) {
+    public GenericResponse upsert(Transaction transaction) {
         String sql = "insert into transactions (transaction_id, amount, type, parent_id) values (?, ?, ?, ?) " +
                 "on conflict (transaction_id) do update set amount=?, type=?, parent_id=?";
         if (transaction.getParentId() == null) {

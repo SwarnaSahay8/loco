@@ -1,6 +1,6 @@
 package assignment.controller;
 
-import assignment.contract.request.AddTransactionRequest;
+import assignment.contract.request.UpsertTransactionRequest;
 import assignment.contract.response.GenericContractResponse;
 import assignment.mapper.TransactionRequestMapper;
 import assignment.model.GenericResponse;
@@ -31,17 +31,17 @@ public class TransactionController {
         this.validator = validator;
     }
 
-    public GenericContractResponse addTransaction(Request request, Response response) {
+    public GenericContractResponse upsertTransaction(Request request, Response response) {
         Long transactionId = Long.valueOf(request.params(TRANSACTION_ID_PARAM));
-        AddTransactionRequest transactionRequest = JsonUtil.deserialize(request.body(), AddTransactionRequest.class);
+        UpsertTransactionRequest transactionRequest = JsonUtil.deserialize(request.body(), UpsertTransactionRequest.class);
 
         GenericResponse validationResponse = validator.validate(transactionRequest);
         if (!validationResponse.isSuccess()) {
             logger.error("validation failed for add transaction");
             return getContractResponse(response, BAD_REQUEST_HTTP_CODE, FAILED_STATUS);
         }
-        Transaction transaction = TransactionRequestMapper.mapFromAddTransactionRequest(transactionRequest, transactionId);
-        GenericResponse dbInsertResponse = transactionRepository.insert(transaction);
+        Transaction transaction = TransactionRequestMapper.mapFromUpsertTransactionRequest(transactionRequest, transactionId);
+        GenericResponse dbInsertResponse = transactionRepository.upsert(transaction);
         if (dbInsertResponse.isSuccess()) {
             logger.debug("add transaction successful");
             return getContractResponse(response, SUCCESS_HTTP_CODE, SUCCESS_STATUS);

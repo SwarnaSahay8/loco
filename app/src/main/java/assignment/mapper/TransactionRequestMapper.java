@@ -1,17 +1,17 @@
 package assignment.mapper;
 
-import assignment.contract.request.AddTransactionRequest;
+import assignment.contract.request.UpsertTransactionRequest;
 import assignment.model.Transaction;
 import assignment.model.TransactionBuilder;
 
 public class TransactionRequestMapper {
 
-    public static Transaction mapFromAddTransactionRequest(AddTransactionRequest addTransactionRequest, Long transactionId) {
+    public static Transaction mapFromUpsertTransactionRequest(UpsertTransactionRequest upsertTransactionRequest, Long transactionId) {
         return new TransactionBuilder()
                 .withTransactionId(transactionId)
-                .withAmount(addTransactionRequest.getAmount())
-                .withType(addTransactionRequest.getType())
-                .withParentId(addTransactionRequest.getParentId())
+                .withAmount(upsertTransactionRequest.getAmount())
+                .withType(upsertTransactionRequest.getType())
+                .withParentId(upsertTransactionRequest.getParentId())
                 .build();
     }
 }
