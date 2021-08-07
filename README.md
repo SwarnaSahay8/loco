@@ -2,7 +2,7 @@
 
 ## APIs
 ### 1. PUT /transactionservice/transaction/:transaction_id : This api will upsert transaction details to db
-```aidl
+```bash
 curl --location --request PUT 'http://localhost:4000/transactionservice/transaction/5' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -13,12 +13,12 @@ curl --location --request PUT 'http://localhost:4000/transactionservice/transact
 ```
 
 ### 2. GET /transactionservice/types/:type: This api gives the list of transaction_ids belonging to given type
-```aidl
+```bash
 curl --location --request GET 'http://localhost:4000/transactionservice/types/car'
 ```
 
 ### 3. GET /transactionservice/sum/:transaction_id: This api gives total sum of a transaction
-```aidl
+```bash
 curl --location --request GET 'http://localhost:4000/transactionservice/sum/2'
 ```
 
@@ -53,7 +53,7 @@ Download the postgres 11 from [here](https://postgresapp.com/).
 ./gradlew clean build
 ```
 
-## Run instruction*
+## Run instruction
 **For running server:**
 ```bash
 docker-compose up -d
@@ -61,5 +61,5 @@ docker-compose up -d
 ```
 Note: For above commands make sure you have docker installed. You can download docker from [here](https://hub.docker.com/editions/community/docker-ce-desktop-mac) 
 
-###Author
+### Author
 Swarna
