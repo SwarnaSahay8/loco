@@ -6,7 +6,7 @@ services:
       - "5432:5432"
     environment:
       - POSTGRES_DB=transactions_db
-      - POSTGRES_USER=swarna
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
     volumes:
       - ./app/src/main/resources/db/create_table.sql:/docker-entrypoint-initdb.d/create_table.sql

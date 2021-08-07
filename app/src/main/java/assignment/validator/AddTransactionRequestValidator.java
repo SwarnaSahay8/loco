@@ -1,11 +1,18 @@
 package assignment.validator;
 
 import assignment.contract.request.AddTransactionRequest;
+import assignment.model.Error;
+import assignment.model.GenericResponse;
 import com.google.common.base.Strings;
 
 public class AddTransactionRequestValidator {
 
-    public boolean validate(AddTransactionRequest request) {
-        return !(request.getAmount() == null) && !(Strings.isNullOrEmpty(request.getType()));
+    public GenericResponse validate(AddTransactionRequest request) {
+        if (request.getAmount() == null) {
+            return new GenericResponse(new Error("amount", "amount should be present"));
+        } else if (Strings.isNullOrEmpty(request.getType())) {
+            return new GenericResponse(new Error("type", "type should be present"));
+        }
+        return new GenericResponse(true);
     }
 }

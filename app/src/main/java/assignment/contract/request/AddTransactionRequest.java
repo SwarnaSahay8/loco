@@ -2,17 +2,17 @@ package assignment.contract.request;
 
 public class AddTransactionRequest {
 
-    private double amount;
+    private Double amount;
     private String type;
-    private long parentId;
+    private Long parentId;
 
-    public AddTransactionRequest(double amount, String type, long parentId) {
+    public AddTransactionRequest(Double amount, String type, Long parentId) {
         this.amount = amount;
         this.type = type;
         this.parentId = parentId;
     }
 
-    public double getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
@@ -20,7 +20,7 @@ public class AddTransactionRequest {
         return type;
     }
 
-    public long getParentId() {
+    public Long getParentId() {
         return parentId;
     }
 }
